@@ -1,25 +1,22 @@
+import React, { useState } from "react";
 import {
   Button,
   Card,
-  createTheme,
-  makeStyles,
   TextField,
   ThemeProvider,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { darkTheme } from "../theme"; // ✅ extracted theme
 import RoomIcon from "@material-ui/icons/Room";
 import EmailIcon from "@material-ui/icons/Email";
 import PhoneIcon from "@material-ui/icons/Phone";
-
-
-
 
 const useStyles = makeStyles((theme) => ({
   title: {
     display: "flex",
     alignItems: "center",
-    marginLeft : 560,
+    marginLeft: 560,
     color: "orange",
     fontFamily: "Open Sans",
   },
@@ -37,35 +34,43 @@ const useStyles = makeStyles((theme) => ({
   call: {
     margin: "15px 0 auto 590px",
   },
-  bg: {
-    backgroundColor: "blue",
-  },
   leftContent: {
     margin: "-300px 0 auto 300px",
   },
   rightContent: {
     margin: "15px 0 auto 0",
   },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "30px",
+    margin: "50px 630px auto 150px",
+    padding: "18px",
+  },
+  submitButton: {
+    width: 100,
+    height: 45,
+    marginLeft: 220,
+    backgroundColor: "orange",
+  },
+  iconLocation: {
+    margin: "auto 0 1px 650px",
+  },
+  iconEmail: {
+    margin: "15px 0 auto 655px",
+  },
+  iconPhone: {
+    margin: "15px 0 auto 655px",
+  },
 }));
 
 const Contact = () => {
+  const classes = useStyles();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  //database file will be added here
-
-
-  
-  const darkTheme = createTheme({
-    palette: {
-      primary: {
-        main: "#fff",
-      },
-      type: "dark",
-    },
-  });
-
+  // Handles form submission
   const handleSubmit = async () => {
     if (!name || !email || !message) {
       setAlert({
@@ -75,35 +80,49 @@ const Contact = () => {
       });
       return;
     }
+
+    const regExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    if (!regExp.test(email)) {
+      setAlert({
+        open: true,
+        message: "Please Enter Valid Email Address!",
+        type: "error",
+      });
+    } else {
+      setAlert({
+        open: true,
+        message: `Your Feedback/Query Has Been Sent Successfully!`,
+        type: "success",
+      });
+      addDoc(messageRef, {
+        name: name,
+        email: email,
+        message: message,
+      });
+    }
   };
 
   return (
     <>
       <Typography variant="h3" className={classes.title}>
         <div id="contact">Contact</div>
-      </Typography>{" "}
+      </Typography>
+
       <br />
+
       <Typography variant="h5" className={classes.tagline}>
-        We're always happy to hear from our visitors &
-        <br />
+        We're always happy to hear from our visitors & <br />
         answer any questions you may have about cryptocurrencies, Please give us
         feedback.
-      </Typography>{" "}
+      </Typography>
+
       <br />
+
       <div className={classes.rightContent}>
         <ThemeProvider theme={darkTheme}>
-          <Card
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "30px",
-              margin: "50px 630px auto 150px",
-              padding: "18px",
-            }}
-          >
+          <Card className={classes.card}>
             <TextField
               variant="filled"
-              type="textarea"
               label="Enter Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -121,7 +140,6 @@ const Contact = () => {
 
             <TextField
               variant="filled"
-              type="textarea"
               label="Enter Your Feedback/Query"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -131,53 +149,31 @@ const Contact = () => {
             <Button
               variant="contained"
               color="primary"
-              style={{
-                width : 100,
-                height : 45,
-                marginLeft : 220,
-                backgroundColor: "orange",
-              }}
-              onSubmit={handleSubmit}
-              onClick={() => {
-                const regExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-                if (!regExp.test(email)) {
-                  setAlert({
-                    open: true,
-                    message: "Please Enter Valid Email Address!",
-                    type: "error",
-                  });
-                } else {
-                  setAlert({
-                    open: true,
-                    message: `Your Feedback/Query Has Been Sent Successfully!`,
-                    type: "success",
-                  });
-                }
-                addDoc(messageRef, {
-                  name: name,
-                  email: email,
-                  message: message,
-                });
-              }}
+              className={classes.submitButton}
+              onClick={handleSubmit}
             >
               Submit
             </Button>
           </Card>
         </ThemeProvider>
       </div>
+
       <div className={classes.leftContent}>
-        <RoomIcon style={{ margin: "auto 0 1px 650px" }} htmlColor="orange" />
+        <RoomIcon className={classes.iconLocation} htmlColor="orange" />
         <Typography variant="h6" className={classes.location}>
           Vansda,Navsari,Gujarat
         </Typography>
-        <EmailIcon style={{ margin: "15px 0 auto 655px" }} htmlColor="orange" />
+
+        <EmailIcon className={classes.iconEmail} htmlColor="orange" />
         <Typography variant="h6" className={classes.email}>
           hrsh.parakh02@gmail.com
         </Typography>
-        <PhoneIcon style={{ margin: "15px 0 auto 655px" }} htmlColor="orange" />
+
+        <PhoneIcon className={classes.iconPhone} htmlColor="orange" />
         <Typography variant="h6" className={classes.call}>
           +91 94275 94784
         </Typography>
+
         <br />
         <br /> <br /> <br />
       </div>
