@@ -8,6 +8,10 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Footer from "../Components/Footer";
+import { useState } from "react";
+import { CryptoState } from "../CryptoContext";
+import { auth } from "../Firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -35,6 +39,42 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
 }));
+
+
+const ForgotPassword = () => {
+  const classes = useStyles();
+  const [email, setEmail] = useState("");
+
+  const { setAlert } = CryptoState();
+
+  const handleSubmit = async () => {
+    if (!email) {
+      setAlert({
+        open: true,
+        message: "Please enter email id",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      const sendPasswordReset = await sendPasswordResetEmail(auth, email);
+      setAlert({
+        open: true,
+        message: `Email has been sent successfully `,
+        type: "success",
+      });
+
+      console.log(sendPasswordReset);
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type: "error",
+      });
+      return;
+    }
+  };
 
 
   const darkTheme = createTheme({
