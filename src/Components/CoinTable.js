@@ -19,6 +19,8 @@ import {
 import { CryptoState } from "../CryptoContext";
 import { useHistory } from "react-router-dom";
 import Header from "./Header";
+import News from "./News";
+
 
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -200,7 +202,8 @@ export default function CoinTable() {
           />
         </Container>
       </ThemeProvider>
-      
+        <br />
+      <News />
     </>
   );
 }
