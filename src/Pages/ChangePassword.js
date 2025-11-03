@@ -8,6 +8,11 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import Footer from "../Components/Footer";
+import { confirmPasswordReset } from "firebase/auth";
+import { useEffect } from "react";
+import { useState } from "react";
+import { CryptoState } from "../CryptoContext";
+import { auth } from "../Firebase";
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -35,6 +40,55 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
   },
 }));
+const ChangePassword = () => {
+  const classes = useStyles();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [oobCode, setOobCode] = useState("");
+
+  const { setAlert } = CryptoState();
+
+  const handleSubmit = async () => {
+    if (password !== confirmPassword) {
+      setAlert({
+        open: true,
+        message: "Passwords do not match",
+        type: "error",
+      });
+      return;
+    }
+
+    try {
+      const result = await confirmPasswordReset(
+        auth,
+        oobCode,
+        password,
+        confirmPassword
+      );
+      setAlert({
+        open: true,
+        message: `Password has been changed Successfully `,
+        type: "success",
+      });
+
+      console.log(result);
+    } catch (error) {
+      setAlert({
+        open: true,
+        message: error.message,
+        type: "error",
+      });
+      return;
+    }
+  };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const oobCode = searchParams.get("oobCode");
+    if (oobCode) {
+      setOobCode(oobCode);
+    }
+  }, []);
 
  const darkTheme = createTheme({
     palette: {
