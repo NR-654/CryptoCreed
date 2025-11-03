@@ -64,6 +64,46 @@ const useStyles = makeStyles({
     boxShadow: "0 0 3px black",
   },
 });
+
+
+export default function UserSidebar() {
+  const classes = useStyles();
+
+  const [state, setState] = React.useState({
+    right : false,
+  });
+  const { user, setAlert, watchlist, coins, symbol } = CryptoState();
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  const logOut = () => {
+    signOut(auth);
+    setAlert({
+      open: true,
+      type: "success",
+      message: "Logout Successfull !",
+    });
+
+    toggleDrawer();
+  };
+
+  const removeFromWatchlist = async (coin) => {
+    const coinRef = doc(db, "watchlist", user.uid);
+    try {
+      await setDoc(
+        coinRef,
+        { coins: watchlist.filter((wish) => wish !== coin?.id) },
+        { merge: true }
+      );
       setAlert({
         open: true,
         message: `${coin.name} Removed from the Watchlist !`,
