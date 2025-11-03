@@ -5,6 +5,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import Footer from "./Footer";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +50,31 @@ const useStyles = makeStyles((theme) => ({
     width : "700px",
   },
 }));
+
+
+const News = () => {
+  const [data, setData] = useState([]);
+  const classes = useStyles();
+
+  const fetchData = async () => {
+    await axios
+      .get(
+        "https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=<key>"
+      )
+      .then((res) => {
+        const responseData = res.data.Data;
+        if (Array.isArray(responseData)) {
+          setData(responseData);
+        } else {
+          setData([]);
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
  return (
     <>
