@@ -11,7 +11,23 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
 }));
+const Login = ({ handleClose }) => {
+  const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const { setAlert } = CryptoState();
+
+  const handleSubmit = async () => {
+    if (!email || !password) {
+      setAlert({
+        open: true,
+        message: "Please fill all the Fields",
+        type: "error",
+      });
+      return;
+    }
+    {
 
       const regExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
       if (!regExp.test(email)) {
