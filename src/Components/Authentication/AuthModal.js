@@ -54,6 +54,30 @@ export default function AuthModal() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+    const googleProvider = new GoogleAuthProvider();
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, googleProvider)
+      .then((res) => {
+        setAlert({
+          open: true,
+          message: `Login Successful. Welcome ${res.user.email}`,
+          type: "success",
+        });
+
+        handleClose();
+      })
+      .catch((error) => {
+        setAlert({
+          open: true,
+          message: error.message,
+          type: "error",
+        });
+        return;
+      });
+  };
+
   
   return (
     <div>
@@ -113,4 +137,4 @@ export default function AuthModal() {
     </div>
   );
 }
-// Made with ♥ by Harsh Parakh
+
