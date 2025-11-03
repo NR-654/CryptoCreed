@@ -17,9 +17,12 @@ import {
   Paper,
 } from "@material-ui/core";
 import { CryptoState } from "../CryptoContext";
+import { useHistory } from "react-router-dom";
 import Header from "./Header";
 
-
+export function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 export default function CoinTable() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -49,6 +52,19 @@ export default function CoinTable() {
       type: "dark",
     },
   });
+  
+  const classes = useStyles();
+  const history = useHistory();
+
+   const handleSearch = () => {
+    return coins.filter(
+      (coin) =>
+        coin.name.toLowerCase().includes(search) ||
+        coin.name.toUpperCase().includes(search) ||
+        coin.symbol.toLowerCase().includes(search) ||
+         coin.symbol.toUpperCase().includes(search)
+     );
+     };
 
 
   return (
