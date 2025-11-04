@@ -1,8 +1,26 @@
 import React, { useState } from "react";
 import { Box, Button, makeStyles, TextField } from "@material-ui/core";
+import { CryptoState } from "../../../CryptoContext";
+import { hashMessage } from "ethers/lib/utils";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../../Firebase";
+import { useHistory } from "react-router-dom";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 
+const Login = () => {
+  const [names, setNames] = useState("");
+  const [number, setNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [secreteKey, setSecreteKey] = useState("");
+  const [result, setResult] = useState("");
 
- const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
     recaptchaContainer: {
       marginLeft : 30,
     },
@@ -10,6 +28,100 @@ import { Box, Button, makeStyles, TextField } from "@material-ui/core";
       height : "20px",
     },
   }));
+
+ const classes = useStyles();
+  const { setAlert } = CryptoState();
+  const auth = getAuth();
+  const adminRef = collection(db, "admins");
+  const history = useHistory();
+
+  const handleLogin = async () => {
+    if (!names || !number || !otp || !secreteKey) {
+      setAlert({
+        open: true,
+        message: "Please fill all the Fields",
+        type: "error",
+      });
+      return;
+    }
+    if (secreteKey !== "cryptocreed") {
+      setAlert({
+        open: true,
+        message: "You are not admin! Please enter correct Secrete key",
+        type: "error",
+      });
+      return;
+    } else {
+      history.push("/adminDashboard");
+      setAlert({
+        open: true,
+        message: "Welcome Admin !",
+        type: "success",
+      });
+    }
+    addDoc(adminRef, {
+      names: names,
+      number: number,
+      secreteKey: hashMessage(secreteKey),
+    });
+  };
+
+  function setUpRecaptha(number) {
+    const recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {},
+      auth
+    );
+    recaptchaVerifier.render();
+    return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+  }
+
+  const getOtp = async (e) => {
+    e.preventDefault();
+    console.log(number);
+    setAlert({
+      open: true,
+      message: "Please Verify!",
+      type: "info",
+    });
+    if (number === "" || number === undefined)
+      setAlert({
+        open: true,
+        message: "please enter valid mobile no.",
+        type: "error",
+      });
+    try {
+      const response = await setUpRecaptha(number);
+      setResult(response);
+    } catch (err) {
+      setAlert({
+        open: true,
+        message: err.message,
+        type: "error",
+      });
+      return;
+    }
+  };
+
+  const verifyOtp = async (e) => {
+    e.preventDefault();
+    if (otp === "" || otp === null) return;
+    try {
+      await result.confirm(otp);
+      setAlert({
+        open: true,
+        message: "valid OTP",
+        type: "success",
+      });
+    } catch (err) {
+      setAlert({
+        open: true,
+        message: err.message,
+        type: "error",
+      });
+      return;
+    }
+  };
 
  return (
     <>
