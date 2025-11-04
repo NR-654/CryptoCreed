@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../../../Firebase";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { ThemeProvider } from "@material-ui/styles";
 import {
   Button,
@@ -18,11 +20,11 @@ import { CryptoState } from "../../../CryptoContext";
 import { Pagination } from "@material-ui/lab";
 import { Search } from "@material-ui/icons";
 
-
- const [search, setSearch] = useState("");
+const UserData = () => {
+  const [usersData, setUsersData] = useState([]);
+  const [search, setSearch] = useState("");
   const { loading } = CryptoState();
   const [page, setPage] = useState(1);
-
   const useStyles = makeStyles({
     row: {
       backgroundColor: "#16171a",
@@ -43,9 +45,43 @@ import { Search } from "@material-ui/icons";
     },
   });
 
+  const handleSearch = () => {
+    return usersData.filter(
+      (user) =>
+        user.name.toLowerCase().includes(search) ||
+        user.name.toUpperCase().includes(search) ||
+        user.email.toLowerCase().includes(search) ||
+        user.email.toUpperCase().includes(search)
+    );
+  };
 
+  const handelDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "users", id));
+      setUsersData(usersData.filter((user) => user.id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  useEffect(() => {
+    const getUsers = async () => {
+      let list = [];
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        usersSnapshot.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setUsersData(list);
+        // console.log(list)
+      } catch (error) {
+        console.error("Error getting users:", error);
+      }
+    };
+    getUsers();
+  }, []);
 
+  // console.log(usersData);
 
  const useStyles = makeStyles({
     row: {
