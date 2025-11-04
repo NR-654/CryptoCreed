@@ -1,5 +1,6 @@
 import { Card, Paper, Typography, makeStyles } from "@material-ui/core";
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 const Home = () => {
   const [totalUsers, setTotalUsers] = useState(0);
@@ -41,6 +42,35 @@ const Home = () => {
   const classes = useStyles();
 
 
+useEffect(() => {
+    const fetchTotalUsers = async () => {
+      try {
+        const firestore = getFirestore();
+        const querySnapshot = await getDocs(collection(firestore, "users"));
+        const count = querySnapshot.size;
+        setTotalUsers(count);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchTotalUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalAdmin = async () => {
+      try {
+        const firestore = getFirestore();
+        const querySnapshot = await getDocs(collection(firestore, "admins"));
+        const count = querySnapshot.size;
+        setTotalAdmin(count);
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+      }
+    };
+
+    fetchTotalAdmin();
+  }, []);
 
   return (
     <>
