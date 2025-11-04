@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../../../Firebase";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { ThemeProvider } from "@material-ui/styles";
 import {
   Button,
@@ -20,6 +22,7 @@ import { Search } from "@material-ui/icons";
 
 
 const UserMessage = () => {
+   const [userMessage, setUserMessage] = useState([]);
  const [search, setSearch] = useState("");
   const { loading } = CryptoState();
   const [page, setPage] = useState(1);
@@ -44,6 +47,41 @@ const UserMessage = () => {
     },
   });
 
+  const handleSearch = () => {
+    return userMessage.filter(
+      (user) =>
+        user.name.toLowerCase().includes(search) ||
+        user.name.toUpperCase().includes(search) ||
+        user.email.toLowerCase().includes(search) ||
+        user.email.toUpperCase().includes(search)
+    );
+  };
+
+  useEffect(() => {
+    const getUserMessage = async () => {
+      let list = [];
+      try {
+        const userMessageSnapshot = await getDocs(collection(db, "message"));
+        userMessageSnapshot.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setUserMessage(list);
+      } catch (error) {
+        console.error("Error getting user Message:", error);
+      }
+    };
+    getUserMessage();
+  }, []);
+
+  const handelDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "message", id));
+      setUserMessage(userMessage.filter((user) => user.id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
 const darkTheme = createTheme({
     palette: {
       primary: {
