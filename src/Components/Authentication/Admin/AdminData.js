@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db } from "../../../Firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Pagination } from "@material-ui/lab";
@@ -16,8 +16,38 @@ import {
   createTheme,
   makeStyles,
 } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
+import { CryptoState } from "../../../CryptoContext";
 
+const AdminData = () => {
+  const [adminData, setAdminData] = useState([]);
+  const { loading } = CryptoState();
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
 
+ const handleSearch = () => {
+    return adminData.filter(
+      (user) => user.number.includes(search) || user.number.includes(search)
+    );
+  };
+
+  useEffect(() => {
+    const getAdmin = async () => {
+      let list = [];
+      try {
+        const adminSnapshot = await getDocs(collection(db, "admins"));
+        adminSnapshot.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setAdminData(list);
+        // console.log(list)
+      } catch (error) {
+        console.error("Error getting admins:", error);
+      }
+    };
+    getAdmin();
+  }, []);
+  // console.log(adminData);
 
 const useStyles = makeStyles({
     row: {
