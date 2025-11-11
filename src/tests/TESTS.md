@@ -70,8 +70,8 @@ All tests validate core component behavior, API interactions, and user flows.
 - No real network requests
 
 ---
-
-![Test Results Screenshot](./test_result.png)
+## **Test Result**
+![Test Results](./test_results/test_result.png)
 
 
 ## ✅ Overall Testing Summary
