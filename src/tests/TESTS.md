@@ -71,6 +71,9 @@ All tests validate core component behavior, API interactions, and user flows.
 
 ---
 
+![Test Results Screenshot](./test_result.png)
+
+
 ## ✅ Overall Testing Summary
 
 | Component | Test File | Type |
