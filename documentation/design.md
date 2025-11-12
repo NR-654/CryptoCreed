@@ -102,8 +102,51 @@ React state & context cause UI to automatically update when:
 ## ✅ 2.4 Factory Pattern (in testing)
 Mocks act like factories that create fake Firebase & Axios objects.
 
-Example:
-```js
+``
 jest.mock("firebase/auth", () => ({
   createUserWithEmailAndPassword: jest.fn()
-}));
+}));``
+
+---
+
+# ✅ 3. Key Refactoring Done to Improve Design
+
+✅ 3.1 Moved API Calls Out of Components  
+API logic originally lived inside UI components.  
+We moved all stateful logic into **CryptoContext**.  
+
+✅ Cleaner UI  
+✅ Stronger separation  
+✅ Better testability  
+
+---
+
+✅ 3.2 MUI Input Extraction Helper Added  
+Material UI labels are not simple `<label>` elements,  
+so a helper was added in tests to reliably get input fields.  
+
+✅ More stable component tests  
+
+---
+
+✅ 3.3 HomePage Layout Refactored  
+Earlier `HomePage` used inline JSX and multiple `<br />` tags.  
+
+Refactoring done:  
+- Cleaned layout  
+- Removed redundant HTML  
+- Improved readability  
+
+✅ Better UI structure  
+
+---
+
+✅ 3.4 Refactor: UserData Component  
+- Added **useEffect()** to dynamically fetch user data from Firestore  
+- Used `getDocs` and `deleteDoc` for real-time updates  
+- Implemented **search filter** for name & email  
+- Ensured UI consistency after deletion  
+
+✅ Result: More efficient, readable, and maintainable code
+
+---
