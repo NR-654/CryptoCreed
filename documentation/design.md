@@ -55,3 +55,55 @@ This directly improves software design because:
 ✅ Result: Cleaner project architecture
 
 ---
+# ✅ 2. Design Pattern Used
+
+## ✅ 2.1 SOLID Principles
+
+**S — Single Responsibility**  
+Each component has one clear job:  
+`Signup.js` (user signup) • `CoinTable.js` (crypto list) • `News.js` (news fetch) • `CryptoContext.js` (global state).  
+➡️ Improves clarity & reduces bugs.
+
+**O — Open/Closed**  
+Components are open for new features (e.g., sorting, compare coins) but closed for modifying core logic.  
+➡️ Easier feature expansion.
+
+**L — Liskov Substitution**  
+Mocks can replace real components (e.g., mocked Firebase, Axios, News) without breaking tests.  
+➡️ Ensures flexibility in testing.
+
+**I — Interface Segregation**  
+Context removes the need for large prop chains.  
+➡️ Each component only uses what it needs.
+
+**D — Dependency Inversion**  
+Components rely on abstractions (Context, mocks) not implementations (real APIs).  
+➡️ Enables modular, testable design.
+
+## ✅ 2.2 Context Pattern
+`CryptoContext.js` uses React Context to share global state across components.
+
+✅ Eliminates prop drilling  
+✅ Centralizes global logic  
+
+---
+
+## ✅ 2.3 Observer Pattern (state updates)
+React state & context cause UI to automatically update when:
+
+- currency changes  
+- coins list updates  
+- user logs in/out  
+
+✅ Natural implementation of Observer Pattern through React  
+
+---
+
+## ✅ 2.4 Factory Pattern (in testing)
+Mocks act like factories that create fake Firebase & Axios objects.
+
+Example:
+```js
+jest.mock("firebase/auth", () => ({
+  createUserWithEmailAndPassword: jest.fn()
+}));
