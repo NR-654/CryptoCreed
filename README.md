@@ -1,12 +1,53 @@
-# 📌 CryptoCreed – Cryptocurrency Tracking Web App
+# CryptoCreed – Cryptocurrency Tracking Web App
 
 A React-based crypto market dashboard that provides real-time coin data, detailed charts, authentication, and latest crypto news.
 
 ---
+## Live Demo
+https://crypto-creed-one.vercel.app/
+--
 
-## ✅ 1. Project Setup & Running Instructions
+## 1. Tech Stack
 
-### 📥 Clone the Repository
+### 🖥️ Frontend
+- **React.js**
+- **Material UI (MUI v4 & v5)**
+- **Chart.js + react-chartjs-2**
+- **Anime.js** (background animation)
+
+---
+
+### 🔥 Backend / Services
+- **Firebase Authentication**
+- **Firebase Firestore**
+- **Firebase Hosting** (optional)
+
+---
+
+### 🌐 APIs Used
+- **CoinGecko API** – Market data, charts, crypto prices  
+- **CryptoCompare API** – Latest crypto news
+
+---
+
+### 🛠 Development Tools
+- **Axios** – HTTP requests  
+- **Jest + React Testing Library** – Automated testing  
+- **Postman** – Manual API testing  
+- **Git + GitHub**
+- **Node.js + NPM**
+
+---
+
+### ⚙ Build & Deployment Tools
+- **Vercel / Netlify** – Deployment  
+- **create-react-app (react-scripts)** – Build system
+
+---
+
+## 2. Project Setup & Running Instructions
+
+### Clone the Repository
 
 ``` bash
 git clone 'https://github.com/NR-654/CryptoCreed'
@@ -14,7 +55,7 @@ cd CryptoCreed
 
 ```
 
-### 📦 Install Dependencies
+### Install Dependencies
 
 ``` bash
 npm install
@@ -30,16 +71,15 @@ REACT_APP_FIREBASE_PROJECT_ID=your_project_id
 REACT_APP_FIREBASE_STORAGE_BUCKET=your_bucket
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 REACT_APP_FIREBASE_APP_ID=your_app_id
-
 ```
 
 ▶ Start the App
 ``` bash
 npm start
 ```
+---
 
-
-## 📁 2. Project Structure
+## 3. Project Structure
 
 ```
 CryptoCreed/
@@ -102,18 +142,29 @@ CryptoCreed/
 ```
 
 
-## 🌐 3. API Endpoints Used
+## 4. API Endpoints Used
 
-### 🔹 CoinGecko API (Public — No API Key Required)
-   #### 🔸 Get List of All Coins (with market data)
+### 1. Crypto News API (CryptoCompare)
+``` 
+https://min-api.cryptocompare.com/data/v2/news/?lang=EN&api_key=YOUR_API_KEY
+```
 
+### 2. CoinGecko Price APIs (No API key)
+#### • Coin List
 ```
-GET https://api.coingecko.com/api/v3/coins/markets
-    ?vs_currency={currency}
-    &order=market_cap_desc
-    &per_page=100
-    &page=1
-    &sparkline=false
+https://api.coingecko.com/api/v3/coins/markets
 ```
-### 🔹 News API
+
+#### • Single Coin
+```
+https://api.coingecko.com/api/v3/coins/{id}
+```
+#### • Historical Chart
+```
+https://api.coingecko.com/api/v3/coins/{id}/market_chart
+```
+#### • Trending Coins
+```
+https://api.coingecko.com/api/v3/coins/markets?order=gecko_desc
+```
 
